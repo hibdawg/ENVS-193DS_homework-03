@@ -20,8 +20,25 @@ library(gtsummary) # generating summary tables for models
 library(gt)
 library(readr) # Reads in Data 
 
-my_data <- read_csv("data/hibdata2.csv") # reads in personal data from Data subfolder
+my_data <- read_csv(here("data", "hibdata2.csv")) # read in my data
 ```
+
+```{r Cleaning My Data}
+clean_hibdata <- my_data |> 
+  clean_names() |> 
+  select(day, time, scouting, finals_week, week, outlet, shared_table, duration, floor_level) |> 
+  rename(exam_week = finals_week,
+         shared = shared_table,
+         floor = floor_level)
+
+```
+
+
+### Part 2. Problems
+## Problem 1. Personal Data 
+
+# Data Summarizing 
+A. I am comparing how the duration of time to scout a suitable spot in the UCSB Library changes over time 
 
 
 
