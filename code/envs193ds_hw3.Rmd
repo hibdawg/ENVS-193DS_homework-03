@@ -4,6 +4,7 @@ author: "Hibah Ganie"
 date: "2025-05-28"
 output: html_document
 ---
+
 ## [Hibah's Github Repository](https://github.com/hibdawg/ENVS-193DS_homework-03)
 
 ```{r setup, include=FALSE}
@@ -20,6 +21,7 @@ library(readxl) # reading .xlsx files
 library(ggeffects) # generating model predictions
 library(gtsummary) # generating summary tables for models 
 library(ggplot2)
+library(hms) # working with times
 library(readr) # Reads in Data 
 
 my_data <- read_csv(here("data", "hibdata2.csv")) # read in my data
@@ -28,26 +30,44 @@ my_data <- read_csv(here("data", "hibdata2.csv")) # read in my data
 ```{r Cleaning My Data}
 clean_hibdata <- my_data |> 
   clean_names() |> 
-  select(time, scouting, finals_week, week, outlet, shared_table, duration, floor_level, dayw) |> 
-  rename(exam_week = finals_week,
-         shared = shared_table,
-         floor = floor_level,
-         day = dayw) |> 
-  separate(duration, into = c("hours", "minutes"), sep = ":", convert = TRUE) |>
-  mutate(
-    total_minutes = hours * 60 + minutes,
-    duration_category = if_else(total_minutes < 90, "short", "long")
-  )
+  rename(
+    exam_week = finals_week,
+    shared = shared_table,
+    floor = floor_level,
+    day = dayw) |> 
+   mutate(
+    duration = as_hms(duration),
+    duration_seconds = as.numeric(duration),
+    duration_category = if_else(duration_seconds < 4500, "short", "long"),
+    duration_category = as.factor(duration_category),
+    outlet = as.factor(outlet),
+    shared = as.factor(shared),
+    floor = as.factor(floor),
+    exam_week = as.factor(exam_week),
+    week = factor(week,
+                  ordered = TRUE,
+                  levels = c("1", "2","3", "4", "5", "6", "7", "8", "9", "10")
+    ),
+    day = factor(day,
+                 ordered = TRUE,
+                 levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+                 )
+  ) |> 
+  select(time, scouting, exam_week, week, outlet, shared, duration, floor, day, duration_category)
+
 ```
 
 
 ### Part 2. Problems
-## Problem 1. Personal Data 
 
-# Data Summarizing 
-A. . I could compare how the duration of events follows my class schedule and see how I have shorter events on days where I have class due to gaps in my schedule where I study. I also want to compare how total study time based on weeks increase, or may taper off as I struggle to find a spot in the library and may need to go elsewhere to study. 
+## Problem 1. Personal Data
 
-B. 
+# Data Summarizing
+
+A.  
+[I could compare how the duration of events follows my class schedule and see how I have shorter events on days where I have class due to gaps in my schedule where I study. I also want to compare how total study time based on weeks increase, or may taper off as I struggle to find a spot in the library and may need to go elsewhere to study.]
+
+B.  
 ```{r Data Visualization}
 ggplot(
   clean_hibdata, # Select Clean Datafram
@@ -56,16 +76,14 @@ ggplot(
 ) +
   geom_bar(position = "dodge") + # Bar Graph
   labs( # Add labels
-    title = "Short vs Long Sessions by Day", # title of Graph
+    title = "Short vs Long Study Sessions Throuout the Week", # title of Graph
     x = "Days of the Week", # X Label
     y = "Number of Sessions", # Y Lael
-    fill = "session Length", # Differentiate Based on category
-    caption = "y a mama."
+    fill = "Session Type", # Differentiate Based on category
+    caption = "Study Session Data From Hibah Ganie"
   ) + 
   theme_classic() + # choose theme!
   scale_fill_manual( # mannually change colors 
     values = c("short" = "pink", # pink
-               "long" = "orange")) # orange
+               "long" = "#223291")) # orange
 ```
-
-
