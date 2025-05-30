@@ -121,3 +121,7 @@ hibtable_gt <- hibtable |>
 hibtable_gt
 ```
 
+## Problem 2: Affective Visualization
+
+#A. 
+[I really enjoyed the simplicity and amount of information able to be conveyed in the Dear Data Project that characterized the differences in affection by shape, color, and symbol. Since my study sessions are characterized by many different aspects, I would like to do a similar concept. This could mean a gradient from black to white to represent the floor, with lighter colors being earlier floors, spikes to represent outlets, the greatest shape representing the type of session, and smaller shapes representing how long it took for me to find the spot.]
