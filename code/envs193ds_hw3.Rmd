@@ -59,7 +59,8 @@ ggplot(
     title = "Short vs Long Sessions by Day", # title of Graph
     x = "Days of the Week", # X Label
     y = "Number of Sessions", # Y Lael
-    fill = "session Length" # Differentiate Based on category
+    fill = "session Length", # Differentiate Based on category
+    caption = "y a mama."
   ) + 
   theme_classic() + # choose theme!
   scale_fill_manual( # mannually change colors 
