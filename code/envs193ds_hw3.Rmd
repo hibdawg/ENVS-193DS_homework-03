@@ -13,11 +13,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r Reading In Packages and Data}
 library(tidyverse) # General Use
 library(janitor) # Cleaning data Frames
+library(dplyr) # Mutate columns
+library(lubridate) # make dealing with dates easier
 library(here) # File Organization
 library(readxl) # reading .xlsx files
 library(ggeffects) # generating model predictions
 library(gtsummary) # generating summary tables for models 
-library(gt)
+library(ggplot2)
 library(readr) # Reads in Data 
 
 my_data <- read_csv(here("data", "hibdata2.csv")) # read in my data
@@ -26,11 +28,16 @@ my_data <- read_csv(here("data", "hibdata2.csv")) # read in my data
 ```{r Cleaning My Data}
 clean_hibdata <- my_data |> 
   clean_names() |> 
-  select(day, time, scouting, finals_week, week, outlet, shared_table, duration, floor_level) |> 
+  select(time, scouting, finals_week, week, outlet, shared_table, duration, floor_level, dayw) |> 
   rename(exam_week = finals_week,
          shared = shared_table,
-         floor = floor_level)
-
+         floor = floor_level,
+         day = dayw) |> 
+  separate(duration, into = c("hours", "minutes"), sep = ":", convert = TRUE) |>
+  mutate(
+    total_minutes = hours * 60 + minutes,
+    duration_category = if_else(total_minutes < 90, "short", "long")
+  )
 ```
 
 
@@ -38,7 +45,26 @@ clean_hibdata <- my_data |>
 ## Problem 1. Personal Data 
 
 # Data Summarizing 
-A. I am comparing how the duration of time to scout a suitable spot in the UCSB Library changes over time 
+A. . I could compare how the duration of events follows my class schedule and see how I have shorter events on days where I have class due to gaps in my schedule where I study. I also want to compare how total study time based on weeks increase, or may taper off as I struggle to find a spot in the library and may need to go elsewhere to study. 
 
+B. 
+```{r}
+ggplot(
+  clean_hibdata,
+  aes(x = day,
+      fill = duration_category)
+) +
+  geom_bar(position = "dodge") + 
+  labs(
+    title = "Short vs Long Sessions by Day",
+    x = "Days of the Week",
+    y = "Number of Sessions",
+    fill = "session Length"
+  ) + 
+  theme_classic() +
+  scale_fill_manual(
+    values = c("short" = "pink",
+               "long" = "orange"))
+```
 
 
