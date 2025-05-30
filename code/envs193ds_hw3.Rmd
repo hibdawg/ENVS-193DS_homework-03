@@ -48,23 +48,23 @@ clean_hibdata <- my_data |>
 A. . I could compare how the duration of events follows my class schedule and see how I have shorter events on days where I have class due to gaps in my schedule where I study. I also want to compare how total study time based on weeks increase, or may taper off as I struggle to find a spot in the library and may need to go elsewhere to study. 
 
 B. 
-```{r}
+```{r Data Visualization}
 ggplot(
-  clean_hibdata,
-  aes(x = day,
-      fill = duration_category)
+  clean_hibdata, # Select Clean Datafram
+  aes(x = day, # X axis
+      fill = duration_category) # based on Category of Session Length
 ) +
-  geom_bar(position = "dodge") + 
-  labs(
-    title = "Short vs Long Sessions by Day",
-    x = "Days of the Week",
-    y = "Number of Sessions",
-    fill = "session Length"
+  geom_bar(position = "dodge") + # Bar Graph
+  labs( # Add labels
+    title = "Short vs Long Sessions by Day", # title of Graph
+    x = "Days of the Week", # X Label
+    y = "Number of Sessions", # Y Lael
+    fill = "session Length" # Differentiate Based on category
   ) + 
-  theme_classic() +
-  scale_fill_manual(
-    values = c("short" = "pink",
-               "long" = "orange"))
+  theme_classic() + # choose theme!
+  scale_fill_manual( # mannually change colors 
+    values = c("short" = "pink", # pink
+               "long" = "orange")) # orange
 ```
 
 
