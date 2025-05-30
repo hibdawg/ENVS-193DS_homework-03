@@ -23,6 +23,8 @@ library(gtsummary) # generating summary tables for models
 library(ggplot2)
 library(hms) # working with times
 library(readr) # Reads in Data 
+library(xfun)
+library(gt)
 
 my_data <- read_csv(here("data", "hibdata2.csv")) # read in my data
 ```
@@ -58,16 +60,16 @@ clean_hibdata <- my_data |>
 ```
 
 
-### Part 2. Problems
+## Part 2. Problems
 
 ## Problem 1. Personal Data
 
 # Data Summarizing
 
-A.  
+#A.  
 [I could compare how the duration of events follows my class schedule and see how I have shorter events on days where I have class due to gaps in my schedule where I study. I also want to compare how total study time based on weeks increase, or may taper off as I struggle to find a spot in the library and may need to go elsewhere to study.]
 
-B.  
+#B.  
 ```{r Data Visualization}
 ggplot(
   clean_hibdata, # Select Clean Datafram
@@ -76,7 +78,7 @@ ggplot(
 ) +
   geom_bar(position = "dodge") + # Bar Graph
   labs( # Add labels
-    title = "Short vs Long Study Sessions Throuout the Week", # title of Graph
+    title = "Short vs Long Weekly Study Sessions 4/20/25 - 5/29/25", # title of Graph
     x = "Days of the Week", # X Label
     y = "Number of Sessions", # Y Lael
     fill = "Session Type", # Differentiate Based on category
@@ -87,3 +89,35 @@ ggplot(
     values = c("short" = "pink", # pink
                "long" = "#223291")) # orange
 ```
+
+#C.
+[Visualizing UCSB Library Study session Data by category: Long, Short, based on threshold of 1 hour and 30 minutes throughout the week. Trends in shorter, more frequent sessions are common in the beginning of the week and often end in long frequent session specifically on Sunday.]
+
+#D.
+```{r}
+
+hibtable <- clean_hibdata |> 
+  select(day, duration_category) |> 
+  tbl_summary(
+    by = day,
+    statistic = all_categorical() ~ "{n}",
+    label = list(duration_category ~ "Session Type")
+  ) |> 
+  bold_labels() 
+
+hibtable_gt <- hibtable |> 
+  as_gt() |> 
+  tab_header(
+    title = md("**Weekly Study Session Count by Day and Type**")
+  ) |> 
+  tab_style(
+    style = cell_text(color = "white", weight = "bold"),
+    locations = cells_title(groups = "title")
+  ) |> 
+  tab_options(
+    heading.background.color = "darkslateblue"
+  )
+
+hibtable_gt
+```
+
