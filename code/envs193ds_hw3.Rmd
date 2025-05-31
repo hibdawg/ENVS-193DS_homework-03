@@ -20,46 +20,45 @@ library(here) # File Organization
 library(readxl) # reading .xlsx files
 library(ggeffects) # generating model predictions
 library(gtsummary) # generating summary tables for models 
-library(ggplot2)
+library(ggplot2) # visualizations
 library(hms) # working with times
 library(readr) # Reads in Data 
 library(xfun)
-library(gt)
-library(png)
-library(grid)
-library(ggimage)
-library(pandoc)
+library(gt) # tables
+library(png) # images
+library(grid) # images
+library(ggimage) # images
 
 my_data <- read_csv(here("data", "hibdata2.csv")) # read in my data
 ```
 
 ```{r Cleaning My Data}
-clean_hibdata <- my_data |> 
-  clean_names() |> 
+clean_hibdata <- my_data |> # select my data frame to clean
+  clean_names() |> # clean up names, remove spaces etc
   rename(
-    exam_week = finals_week,
+    exam_week = finals_week, # rename the columns to be easier to read
     shared = shared_table,
     floor = floor_level,
     day = dayw) |> 
-   mutate(
+   mutate( # create a new colum to define category of study sessions
     duration = as_hms(duration),
     duration_seconds = as.numeric(duration),
-    duration_category = if_else(duration_seconds < 4500, "short", "long"),
-    duration_category = as.factor(duration_category),
+    duration_category = if_else(duration_seconds < 4500, "short", "long"), # adding a new categorical column to organize the length of study sessions can give insight into how the behavior of library visits changes over time
+    duration_category = as.factor(duration_category), # change all the columns from characters to factors 
     outlet = as.factor(outlet),
     shared = as.factor(shared),
     floor = as.factor(floor),
     exam_week = as.factor(exam_week),
-    week = factor(week,
+    week = factor(week, # make an ordered factor for each week
                   ordered = TRUE,
                   levels = c("1", "2","3", "4", "5", "6", "7", "8", "9", "10")
     ),
     day = factor(day,
-                 ordered = TRUE,
+                 ordered = TRUE, # make each day of the week a ordered factor
                  levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
                  )
   ) |> 
-  select(time, scouting, exam_week, week, outlet, shared, duration, floor, day, duration_category)
+  select(time, scouting, exam_week, week, outlet, shared, duration, floor, day, duration_category) # select which columns to choose
 
 ```
 
@@ -89,7 +88,7 @@ ggplot(
     caption = "Study Session Data From Hibah Ganie"
   ) + 
   theme_classic() + # choose theme!
-  scale_fill_manual( # mannually change colors 
+  scale_fill_manual( # manually change colors 
     values = c("short" = "pink", # pink
                "long" = "#223291")) # orange
 ```
@@ -100,26 +99,26 @@ ggplot(
 #D.
 ```{r}
 
-hibtable <- clean_hibdata |> 
-  select(day, duration_category) |> 
-  tbl_summary(
+hibtable <- clean_hibdata |>  # making a table with my cleaned data 
+  select(day, duration_category) |> #select which columns i want in my table
+  tbl_summary( # choose how I want the data to be divided up in, as categorical: short and long
     by = day,
     statistic = all_categorical() ~ "{n}",
     label = list(duration_category ~ "Session Type")
   ) |> 
-  bold_labels() 
+  bold_labels() # add a pop of boldness in my chaer
 
-hibtable_gt <- hibtable |> 
+hibtable_gt <- hibtable |> # to add color i need to convert to gt table.,,,
   as_gt() |> 
   tab_header(
-    title = md("**Weekly Study Session Count by Day and Type**")
+    title = md("**Weekly Study Session Count by Day and Type**") # new header!!
   ) |> 
   tab_style(
-    style = cell_text(color = "white", weight = "bold"),
+    style = cell_text(color = "white", weight = "bold"), # add color and bold!!
     locations = cells_title(groups = "title")
   ) |> 
   tab_options(
-    heading.background.color = "darkslateblue"
+    heading.background.color = "darkslateblue" # color!!
   )
 
 hibtable_gt
@@ -143,5 +142,18 @@ I did an online drawing on a drawing app. While the online format may be easier,
 
 ## 3 Statistical Critique
 
-#a. 1
+#a.
+[A one-way analysis of variance (ANOVA), was used to look at differences between
+vegetation and watershed regions. The response variables are CAR, SAR, C density, organic and mineral sedimentation, with the
+predictor being watershed regions.]
+[![Draft!](data/stat.png)]
+
+#b.
+[The X-axis and plot itself is a bit clogged with codes, such as: CA,CT,BCD, etc, which reduce the readability of the figure. However the graph is very readable and clearly represents that standard error, mean value, and interquartile range for each figure. The figure shows summary statistics. We can see some of the underlying data in the form of raw data points.]
+
+#C.
+[Considering how many sites the author had to include, the design is decently uncluttered, however the codes clutter the plot due to the sheer amount. The data to ink ratio is high, as each element explains essiental information.]
+
+#D.
+[I thik integrating a color coding system would help alieviate some of the cluttering in the plot. They could possibly give each plot a different color/symbol and maybe put the legend outside of the plot. They could also streamline the means, as the diamonds overlap the essiential information, such as means and get lost. It could also help to group by region to declutter the plot.]
 
