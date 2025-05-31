@@ -25,6 +25,9 @@ library(hms) # working with times
 library(readr) # Reads in Data 
 library(xfun)
 library(gt)
+library(png)
+library(grid)
+library(ggimage)
 
 my_data <- read_csv(here("data", "hibdata2.csv")) # read in my data
 ```
@@ -125,3 +128,28 @@ hibtable_gt
 
 #A. 
 [I really enjoyed the simplicity and amount of information able to be conveyed in the Dear Data Project that characterized the differences in affection by shape, color, and symbol. Since my study sessions are characterized by many different aspects, I would like to do a similar concept. This could mean a gradient from black to white to represent the floor, with lighter colors being earlier floors, spikes to represent outlets, the greatest shape representing the type of session, and smaller shapes representing how long it took for me to find the spot.]
+
+#B.
+[![Visualization Sketch!](data/visual.png)]
+
+#C
+```{r}
+img <- readPNG("data/visual.png")
+g <- rasterGrob(img, interpolate = TRUE)
+
+ggplot(data = clean_hibdata, aes(x = day, y = duration, fill = duration_category)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  annotation_custom(g, xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf)
+```
+
+```{r}
+clean_hibdata$image <- ifelse(
+  clean_hibdata$duration_category == "long", 
+  "data/sun.png", 
+  "data/cloud.png"
+)
+
+ggplot(clean_hibdata, aes(x = day, y = duration)) +
+  geom_image(aes(image = image), size = 0.1)
+```
+
