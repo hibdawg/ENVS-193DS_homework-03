@@ -146,7 +146,7 @@ I did an online drawing on a drawing app. While the online format may be easier,
 [A one-way analysis of variance (ANOVA), was used to look at differences between
 vegetation and watershed regions. The response variables are CAR, SAR, C density, organic and mineral sedimentation, with the
 predictor being watershed regions.]
-[![Draft!](data/stat.png)]
+![Plot!](data/IMG_8094.jpg)
 
 #b.
 [The X-axis and plot itself is a bit clogged with codes, such as: CA,CT,BCD, etc, which reduce the readability of the figure. However the graph is very readable and clearly represents that standard error, mean value, and interquartile range for each figure. The figure shows summary statistics. We can see some of the underlying data in the form of raw data points.]
@@ -156,4 +156,7 @@ predictor being watershed regions.]
 
 #D.
 [I thik integrating a color coding system would help alieviate some of the cluttering in the plot. They could possibly give each plot a different color/symbol and maybe put the legend outside of the plot. They could also streamline the means, as the diamonds overlap the essiential information, such as means and get lost. It could also help to group by region to declutter the plot.]
+
+##Note: 
+# I am not sure why my images will not load in, as when I add the code to the path I am able to click on the code and open the image manually. 
 
